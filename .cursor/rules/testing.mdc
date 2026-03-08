@@ -1,0 +1,299 @@
+---
+description: Jest unit testing rules for Node.js backend
+globs:
+  - "**/*.test.ts"
+  - "**/*.spec.ts"
+  - "**/*.test.js"
+  - "**/*.spec.js"
+alwaysApply: false
+---
+
+# Testing Rule — Jest for Node.js Backend
+
+## Goal
+Write fast, deterministic, readable unit tests for backend business logic using Jest.
+
+## General Principles
+- Prefer **unit tests** for pure business logic and small modules.
+- Keep tests **isolated**: no real DB, network, filesystem, queues, or external services unless the test is explicitly integration-level.
+- Tests must be **deterministic** and produce the same result on every run.
+- Focus on **behavior and outputs**, not internal implementation details.
+- Keep tests easy to read: a new developer should understand the scenario in seconds.
+
+## Test Structure
+- Follow **Arrange / Act / Assert** structure.
+- Use clear `describe` and `it` blocks.
+- Test files should mirror the source file or module they cover.
+- Group tests by function or behavior.
+- Prefer one expectation theme per test case.
+
+Example:
+```ts
+describe('calculateInvoiceTotal', () => {
+  it('returns total including VAT', () => {
+    // Arrange
+    const items = [{ price: 100, qty: 2 }];
+    const vatRate = 0.17;
+
+    // Act
+    const result = calculateInvoiceTotal(items, vatRate);
+
+    // Assert
+    expect(result).toBe(234);
+  });
+});
+```
+
+### Naming Conventions
+	- Test names should describe behavior, not implementation.
+	- Prefer:
+	    •	returns X when Y
+	    •	throws when X
+	    •	calls X with Y
+	- Avoid vague names like:
+        •	works correctly
+        •	should work
+        •	test function
+
+
+- Good examples:
+	•	returns empty array when no transactions exist
+	•	throws validation error when email is missing
+	•	does not retry when error is marked as non-retryable
+
+
+<!-- What to Unit Test -->
+
+<!--  Prioritize:
+ 	•	Business rules
+ 	•	Validation logic
+ 	•	Mapping / transformation functions
+ 	•	Error handling
+ 	•	Edge cases
+ 	•	Branching logic
+	•	Retry / timeout decision logic
+ 	•	Permission / authorization decisions
+ 	•	Idempotency-related logic at function level -->
+
+<!--  Lower priority for pure unit tests:
+ 	•	Framework wiring
+ 	•	Simple DTOs/interfaces
+ 	•	Trivial getters/setters
+ 	•	Thin wrappers with no meaningful logic -->
+
+### Mocking Rules
+	Mock only true external boundaries:
+	•	HTTP clients
+	•	DB repositories
+	•	cache clients
+	•	message brokers
+	•	filesystem
+	•	date/time when needed
+	•	random/uuid generators when determinism matters
+	- Do not over-mock internal helpers if testing through public module behavior is reasonable.
+	- Prefer simple explicit mocks over complex shared magic.
+	- Reset mocks between tests.
+
+Preferred patterns:
+
+``` ts
+jest.mock('../repositories/userRepository');
+const mockedRepo = jest.mocked(userRepository);
+```
+
+or
+``` ts
+const dependency = {
+  sendEmail: jest.fn(),
+};
+```
+
+### Assertions
+
+	•	Assert the important outcome only.
+	•	Avoid asserting every intermediate step unless it matters to behavior.
+	•	For complex objects, use:
+        •	toEqual for exact structure
+        •	toMatchObject for partial shape
+        •	expect.objectContaining(...) when only some fields matter
+	•	For async errors use:
+
+```ts
+await expect(service.doWork()).rejects.toThrow('message');
+```
+
+### Async Testing
+
+	•	Always use await for async code.
+	•	Do not mix done callback style with async/await unless absolutely necessary.
+	•	Ensure rejected promises are asserted explicitly.
+	•	Mock async dependencies with mockResolvedValue / mockRejectedValue.
+
+Example:
+```ts
+    mockedRepo.findById.mockResolvedValue(user);
+    await expect(service.getUser('123')).resolves.toEqual(user);
+```
+
+### Time and Randomness
+	•	Freeze or mock time when testing time-based behavior.
+	•	Stub random values, UUIDs, and non-deterministic generators.
+	•	Prefer predictable inputs over relying on real clock time.
+
+Example:
+
+```ts
+    jest.useFakeTimers().setSystemTime(new Date('2025-01-01'));
+```
+
+### Test Data
+	•	Keep test data minimal and relevant.
+	•	Build only the fields needed for the scenario.
+	•	Prefer small local factories/helpers when repetition appears.
+	•	Avoid giant fixtures unless truly needed.
+
+#### Preferred:
+
+```ts
+const makeUser = (overrides = {}) => ({
+  id: 'u1',
+  email: 'test@example.com',
+  isActive: true,
+  ...overrides,
+});
+```
+
+### Edge Cases
+
+Always think about:
+	•	empty input
+	•	null/undefined input when relevant
+	•	invalid values
+	•	boundary numbers
+	•	duplicate data
+	•	partial failures
+	•	unexpected dependency errors
+	•	already-processed / idempotent cases
+
+### Error Testing
+	•	Verify both:
+        •	the error condition
+        •	any important side effects that must not happen
+	•	When testing failures, confirm external calls were or were not made as expected.
+
+Example:
+```ts
+    await expect(service.createUser(input)).rejects.toThrow(ValidationError);
+    expect(emailClient.send).not.toHaveBeenCalled();
+```
+
+### Interaction Testing
+
+Use interaction assertions only when behavior depends on collaboration with dependencies.
+
+Examples:
+	•	repository called with normalized email
+	•	queue publish called once
+	•	retry service not invoked for non-retryable error
+
+Avoid excessive assertions like checking every single call if the return value already proves the behavior.
+
+### Jest Best Practices
+	•	Use beforeEach for shared clean setup.
+	•	Prefer local setup inside the test if it improves readability.
+	•	Use jest.clearAllMocks() or jest.resetAllMocks() as appropriate.
+	•	Use jest.spyOn when observing real object methods.
+	•	Keep mocks strongly typed where possible.
+	•	Avoid hidden global state across test files.
+
+### Preferred File Layout
+	•	Keep unit tests in a mirrored __tests__ structure.
+	•	Name tests consistently:
+        •	fileName.test.ts
+        •	fileName.spec.ts
+
+### Coverage Guidance
+	•	Do not chase 100% coverage blindly.
+	•	Aim to cover critical business logic and meaningful branches.
+	•	A missing assertion is worse than missing coverage.
+	•	High-value tests matter more than many shallow tests.
+
+### Anti-Patterns to Avoid
+	•	Testing private methods directly
+	•	Testing implementation details instead of public behavior
+	•	Overusing snapshots for backend logic
+	•	Huge brittle fixtures
+	•	Real network/database in unit tests
+	•	Copy-paste test cases with unclear differences
+	•	Assertions with no behavioral value
+	•	Multiple unrelated behaviors in one test
+	•	Random sleeps/timeouts in tests
+
+## When Writing New Tests
+
+### For each function/module:
+	1.	Identify the public behavior.
+	2.	Cover the happy path.
+	3.	Cover key edge cases.
+	4.	Cover failure cases.
+	5.	Mock external boundaries only.
+	6.	Keep the test small and readable.
+
+## Expected Style from the Assistant
+
+### When generating Jest tests for this project:
+	•	Use TypeScript-friendly Jest style where applicable.
+	•	Follow Arrange / Act / Assert.
+	•	Prefer explicit, readable mocks.
+	•	Cover happy path, edge cases, and error path.
+	•	Avoid integration-style tests unless explicitly requested.
+	•	Avoid unnecessary comments except where structure improves clarity.
+	•	Produce test code that is ready to paste into the codebase.
+
+Example Template
+```ts
+describe('UserService.createUser', () => {
+  const userRepository = {
+    findByEmail: jest.fn(),
+    create: jest.fn(),
+  };
+
+  const emailService = {
+    sendWelcomeEmail: jest.fn(),
+  };
+
+  let service: UserService;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    service = new UserService(userRepository, emailService);
+  });
+
+  it('creates a user and sends a welcome email when email is new', async () => {
+    // Arrange
+    userRepository.findByEmail.mockResolvedValue(null);
+    userRepository.create.mockResolvedValue({ id: 'u1', email: 'a@b.com' });
+
+    // Act
+    const result = await service.createUser({ email: 'a@b.com' });
+
+    // Assert
+    expect(userRepository.create).toHaveBeenCalledWith({ email: 'a@b.com' });
+    expect(emailService.sendWelcomeEmail).toHaveBeenCalledWith('a@b.com');
+    expect(result).toEqual({ id: 'u1', email: 'a@b.com' });
+  });
+
+  it('throws when email already exists', async () => {
+    // Arrange
+    userRepository.findByEmail.mockResolvedValue({ id: 'existing-user' });
+
+    // Act + Assert
+    await expect(service.createUser({ email: 'a@b.com' })).rejects.toThrow(
+      'User already exists'
+    );
+
+    expect(userRepository.create).not.toHaveBeenCalled();
+    expect(emailService.sendWelcomeEmail).not.toHaveBeenCalled();
+  });
+});
+```

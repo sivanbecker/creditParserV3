@@ -1,0 +1,10 @@
+---
+description: "This rule provide standard for TS code style"
+globs: *.ts
+alwaysApply: false
+---
+- Use TypeScript for all code; prefer interfaces over types. 
+- Avoid enums.
+- use const objects instead. 
+- Use functional components with TypeScript interfaces for props. 
+- Enable strict mode in TypeScript for better type safety
