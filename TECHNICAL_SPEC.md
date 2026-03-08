@@ -145,3 +145,21 @@ const calSchema = z.object({
 3. **Hebrew Support:** Ensure the database and the parser handle UTF-8 Hebrew characters correctly without encoding issues.
 4. **Categorization Engine:** Create a simple service that checks `merchantName` against a local JSON map to auto-categorize known vendors (e.g., "Wolt" -> "Food").
 
+## 7. Testing Strategy & TDD Workflow
+To ensure system reliability and maintainability, this project follows a strict Test-Driven Development (TDD) approach.
+
+Testing Framework: Jest (with ts-jest).
+
+The "No-Code" Mandate: No implementation logic or service code shall be written until a corresponding failing Unit Test exists in src/__tests__.
+
+Workflow:
+
+Red: Write a Jest test for a specific requirement (e.g., "should parse Cal date format correctly").
+
+Green: Write the minimal code in the service/schema to make the test pass.
+
+Refactor: Clean up the code while ensuring the test remains green.
+
+Scope: * Unit Tests: Focus on Zod schema transformations, the ExcelService wrapper, and the CardMap lookup logic.
+
+Mocks: Use Jest mocks for filesystem (fs) and database (Prisma) operations during unit testing.
