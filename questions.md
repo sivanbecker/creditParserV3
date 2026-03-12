@@ -129,3 +129,5 @@ This file records the questions asked during the PRD/spec brainstorming and the 
 
 - **Local PostgreSQL:** Should we provide a **Docker Compose** (or similar) for local PostgreSQL, or assume devs run Postgres themselves?
 - **Migrations:** Use Prisma Migrate for schema changes from the start? (Assumed yes unless you prefer otherwise.)
+ 
+**Ingestion behavior – Processed folder location – Your answer:** For MVP, use a single global processed directory configured via an env var like `PROCESSED_DIR` (defaulting to a local `./processed` if not set). All successfully ingested files are renamed to `[Last4]_[MM]_[YYYY]_[Provider].xlsx` and moved into this shared folder; logical per-user separation is enforced in the database via `userId`/`CardMap`, not via separate directories. If we ever need stricter per-user archival, we can evolve the path to `PROCESSED_DIR/<userId>/...` without changing the ingestion contract.
