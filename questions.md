@@ -75,3 +75,50 @@ This file records the questions asked during the PRD/spec brainstorming and the 
 | Auth           | JWT (Bearer token)                                                       |
 | Auto-categorize| Yes in MVP (merchant → category map on ingest)                          |
 | Database       | PostgreSQL only                                                          |
+
+---
+
+## 3. Open questions (to be answered)
+
+### Auth & user management
+
+- **User creation:** For MVP, how do users get created? (e.g. CLI-only `user create`, or a `/register` API endpoint, or seed/migration only?)
+**Your answer:** For MVP, users are created via local auth using a `/register` API endpoint that the end-user CLI calls to self-register with email + password, plus a separate admin surface for user management. A dedicated admin CLI calls protected `/admin/users` endpoints (e.g. create/list/deactivate users); the main CLI only acts as an end user. No seed/migration-only creation is planned; passwords are stored hashed, and the design leaves room to later swap in an IdP or expose the API on the internet.
+- **Password policy:** Any requirements (min length, complexity)? Or keep minimal for MVP?
+- **JWT:** Access token only, or access + refresh tokens? Typical access token expiry (e.g. 15 min / 1 h / 24 h)?
+
+### Data ownership & CardMap
+
+- **CardMap scope:** Is the card map (last4 → provider, owner) **global** (one shared config) or **per-user** (each user has their own cards)?
+- **Transaction ownership:** Confirm: every transaction is tied to a `userId` (e.g. via card’s owner at ingest), and users only see their own transactions?
+
+### Categories
+
+- **Predefined list source:** Where do “predefined” categories come from? (Seed list in DB, config file, or first user-created category defines the list?)
+- **Category model:** Do we need a `Category` table (id, name, userId or null for system, isSystem) so “custom” categories are per-user and predefined are system-wide?
+
+### Ingestion behavior
+
+- **Processed folder location:** Single global path from env (e.g. `PROCESSED_DIR`), or configurable per user?
+- **Bulk ingest:** Should `ingest` accept a **directory** (process all .xlsx inside) or only a **single file** per invocation?
+- **Parse/validation errors:** If some rows in a file fail Zod validation, should we: **fail entire file**, **skip bad rows and ingest good ones**, or **save good rows and return a summary of errors**?
+
+### Reporting & “fixed” expenses
+
+- **Date range:** Are reports only for **full month/year** (e.g. “March 2025”), or do we need **arbitrary date range** (e.g. 1 Mar–15 Apr) in MVP?
+- **Fixed expense detection:** Is “fixed expense” **manual only** (user flags a transaction), or should we also support **simple heuristics** (e.g. same merchant + similar amount in last N months) in MVP?
+- **Export:** Do we need **export to CSV/Excel** in MVP, or is that post-MVP?
+
+### CLI & tooling
+
+- **CLI auth:** How does the CLI get the JWT? (e.g. `login` command that stores token in `~/.credit-tracker/token` or env; other commands read it? Or pass `--token` every time?)
+- **CLI framework:** Prefer **Commander.js** or **Clack** for the CLI?
+
+### Testing & consistency
+
+- **Test runner:** TECHNICAL_SPEC says Jest; .cursorrules say Vitest. Which do we use for MVP? (Recommendation: **Vitest** to align with .cursorrules.)
+
+### DevOps & environment
+
+- **Local PostgreSQL:** Should we provide a **Docker Compose** (or similar) for local PostgreSQL, or assume devs run Postgres themselves?
+- **Migrations:** Use Prisma Migrate for schema changes from the start? (Assumed yes unless you prefer otherwise.)
