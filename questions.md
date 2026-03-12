@@ -92,7 +92,9 @@ This file records the questions asked during the PRD/spec brainstorming and the 
 ### Data ownership & CardMap
 
 - **CardMap scope:** Is the card map (last4 → provider, owner) **global** (one shared config) or **per-user** (each user has their own cards)?
+**Your answer:** Per-user. Each user has their own card map; the same last4 can exist for multiple users, with each user assigning provider and owner as needed. Cards are scoped by `userId` in the schema and all card-related queries filter by the authenticated user.
 - **Transaction ownership:** Confirm: every transaction is tied to a `userId` (e.g. via card’s owner at ingest), and users only see their own transactions?
+**Your answer:** Yes. Every transaction is tied to a `userId` (derived from the card's owner at ingest). Users only see their own transactions; all transaction queries filter by the authenticated user's `userId`.
 
 ### Categories
 
