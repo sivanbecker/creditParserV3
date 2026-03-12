@@ -85,6 +85,7 @@ This file records the questions asked during the PRD/spec brainstorming and the 
 - **User creation:** For MVP, how do users get created? (e.g. CLI-only `user create`, or a `/register` API endpoint, or seed/migration only?)
 **Your answer:** For MVP, users are created via local auth using a `/register` API endpoint that the end-user CLI calls to self-register with email + password, plus a separate admin surface for user management. A dedicated admin CLI calls protected `/admin/users` endpoints (e.g. create/list/deactivate users); the main CLI only acts as an end user. No seed/migration-only creation is planned; passwords are stored hashed, and the design leaves room to later swap in an IdP or expose the API on the internet.
 - **Password policy:** Any requirements (min length, complexity)? Or keep minimal for MVP?
+**Your answer:** For MVP, require passwords to be between 15 and 100 characters, with no strict composition rules (no forced symbols/uppercase) to keep local development and CLI usage frictionless. Encourage long passphrases, reject a small set of obviously weak passwords (e.g. `password`, `123456`, app name), do not enforce periodic rotation, and store all passwords as salted, strong hashes (e.g. Argon2id or bcrypt).
 - **JWT:** Access token only, or access + refresh tokens? Typical access token expiry (e.g. 15 min / 1 h / 24 h)?
 
 ### Data ownership & CardMap
