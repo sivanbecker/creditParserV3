@@ -87,6 +87,7 @@ This file records the questions asked during the PRD/spec brainstorming and the 
 - **Password policy:** Any requirements (min length, complexity)? Or keep minimal for MVP?
 **Your answer:** For MVP, require passwords to be between 15 and 100 characters, with no strict composition rules (no forced symbols/uppercase) to keep local development and CLI usage frictionless. Encourage long passphrases, reject a small set of obviously weak passwords (e.g. `password`, `123456`, app name), do not enforce periodic rotation, and store all passwords as salted, strong hashes (e.g. Argon2id or bcrypt).
 - **JWT:** Access token only, or access + refresh tokens? Typical access token expiry (e.g. 15 min / 1 h / 24 h)?
+**Your answer:** For MVP, use access tokens only (no refresh tokens) to keep the auth flow simple for a local/internal tool. The `/login` endpoint issues a JWT access token with a 24-hour expiry, which the CLI stores and sends as a Bearer token; when it expires, the user runs `login` again. If the API later becomes internet-facing or gains more users, we can introduce refresh tokens and shorter-lived access tokens without changing the overall model.
 
 ### Data ownership & CardMap
 
