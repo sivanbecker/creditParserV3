@@ -99,7 +99,10 @@ This file records the questions asked during the PRD/spec brainstorming and the 
 ### Categories
 
 - **Predefined list source:** Where do “predefined” categories come from? (Seed list in DB, config file, or first user-created category defines the list?)
+**Your answer:** Predefined categories come from a seeded list in the database, stored as system-wide `Category` records created via migrations or a Prisma seed script so they are consistent across environments. Category names fully support Hebrew and other Unicode characters. The initial list is a small, opinionated set of Hebrew category names (e.g. `אוכל`, `קניות`, `דיור`, `חשבונות`, `תחבורה`, `מנויים`, `פנאי`, `הכנסות`, `עמלות`, `אחר`) and evolves over time via schema/seed updates. The CLI does not hardcode this list; it always reads categories from the API/DB so new predefined categories can be added without a CLI release.
+
 - **Category model:** Do we need a `Category` table (id, name, userId or null for system, isSystem) so “custom” categories are per-user and predefined are system-wide?
+**Your answer:** Yes. Introduce a `Category` table with fields like `id` (PK), `name` (Unicode-capable string, unique per owner scope), `userId` (nullable FK to `User`), `isSystem` (boolean) and optionally `slug` (string) for stable identifiers. Records with `userId = null` and `isSystem = true` represent system-wide predefined categories (seeded in Hebrew) visible to all users; records with a non-null `userId` represent custom per-user categories only visible/usable by that user. Transactions reference categories by `categoryId` (FK to `Category`), and we enforce uniqueness of `(userId, name)` for custom categories and of `name` for system categories (`userId = null`), while allowing names to include Hebrew and other Unicode characters.
 
 ### Ingestion behavior
 
