@@ -121,10 +121,6 @@ This file records the questions asked during the PRD/spec brainstorming and the 
 - **CLI auth:** How does the CLI get the JWT? (e.g. `login` command that stores token in `~/.credit-tracker/token` or env; other commands read it? Or pass `--token` every time?)
 - **CLI framework:** Prefer **Commander.js** or **Clack** for the CLI?
 
-### Testing & consistency
-
-- **Test runner:** TECHNICAL_SPEC says Jest; .cursorrules say Vitest. Which do we use for MVP? (Recommendation: **Vitest** to align with .cursorrules.)
-
 ### DevOps & environment
 
 - **Local PostgreSQL:** Should we provide a **Docker Compose** (or similar) for local PostgreSQL, or assume devs run Postgres themselves?
