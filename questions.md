@@ -145,3 +145,14 @@ This file records the questions asked during the PRD/spec brainstorming and the 
 **DevOps – Local PostgreSQL – Your answer:** For local development, the project provides a Docker Compose setup for PostgreSQL, and that is the primary supported path. Developers run `docker compose up db` (or equivalent) to get a Postgres instance with the expected version and configuration, matching production as closely as practical. Advanced users can still point `DATABASE_URL` at their own Postgres instance if they prefer, but the repo defaults, documentation, and examples all assume the Docker Compose–managed database to keep onboarding fast and environments consistent.
 
 **DevOps – Migrations – Your answer:** Use Prisma Migrate for all schema changes from day one. The Prisma schema is the single source of truth; developers evolve it and run `prisma migrate dev` in development and `prisma migrate deploy` in CI/production. Direct, manual changes to the database schema are discouraged so that all environments stay in sync, migrations remain reviewable, and rollbacks are manageable.
+
+---
+
+## 4. Implementation plan assumptions (see IMPLEMENTATION_PLAN.md)
+
+The following were assumed when drafting the implementation plan; if any are wrong, correct the plan and add the Q&A here.
+
+- **CardMap storage:** Per-user card mapping is stored in the database as a `Card` model (userId, lastFourDigits, provider, owner, alias), not a static config file. Lookup at ingest uses the authenticated user + last4 derived from the file.
+- **Merchant → category rules:** Stored per-user in the DB as `CategorizationRule` (userId, merchantPattern, categoryId), applied during ingest. Match type in MVP is exact (can be extended later).
+- **Processed files:** Files are **copied** (not moved) to `PROCESSED_DIR` with the standard name; the original file is left unchanged.
+- **Report date scope:** MVP reports use full calendar month (and optionally full year) only; no arbitrary date ranges in the first release.
