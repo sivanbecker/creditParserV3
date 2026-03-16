@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime  @default(now())
+
+  isAdmin Boolean @default(false)
+
+  cards             Card[]
+  categories        Category[]
+  transactions      Transaction[]
+  categorizationRules CategorizationRule[]
+}
+
+model Category {
+  id       String   @id @default(cuid())
+  name     String
+  slug     String?
+  isSystem Boolean  @default(false)
+
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  transactions Transaction[]
+  rules        CategorizationRule[]
+
+  @@unique([userId, name])
+}
+
+model Card {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lastFourDigits String
+  provider       CardProvider
+  owner          String
+  alias          String?
+
+  @@unique([userId, lastFourDigits])
+}
+
+model Transaction {
+  id               String           @id @default(cuid())
+  hash             String           @unique
+  userId           String
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider         CardProvider
+  transactionDate  DateTime
+  billingDate      DateTime?
+  merchantName     String
+  categoryId       String?
+  category         Category?        @relation(fields: [categoryId], references: [id])
+  originalCategory String?
+  amount           Decimal
+  currency         String           @default("ILS")
+  chargedAmount    Decimal
+  type             TransactionType
+  lastFourDigits   String
+  comments         String?
+  installmentsInfo String?
+  isFixedExpense   Boolean          @default(false)
+  metadata         Json?
+  createdAt        DateTime         @default(now())
+
+  @@index([userId])
+  @@index([transactionDate])
+  @@index([userId, transactionDate])
+}
+
+model CategorizationRule {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  merchantPattern String
+  categoryId      String
+  category        Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+}
+
+enum CardProvider {
+  MAX
+  CAL
+}
+
+enum TransactionType {
+  REGULAR
+  INSTALLMENTS
+}
+
