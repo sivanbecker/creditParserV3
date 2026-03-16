@@ -14,9 +14,9 @@ This plan is derived from `spec.md`, `TECHNICAL_SPEC.md`, and `questions.md`. It
 
 ### 0.1 Repository and tooling setup
 - [ ] **0.1.1** Add dependencies: `prisma`, `@prisma/client`, `zod`, `xlsx` (SheetJS), `commander`, `express`, `date-fns`, `argon2` (or `bcrypt`), `jsonwebtoken`, `dotenv`, plus dev: `jest`, `ts-jest`, `@types/express`, `@types/jsonwebtoken`, `@types/node`, `supertest`.
-- [ ] **0.1.2** Configure TypeScript: `tsconfig.json` with `"module": "commonjs"` (or ESM if preferred), `outDir`, `strict`, paths if needed.
-- [ ] **0.1.3** Configure Jest: `jest.config.js` or `jest` section in `package.json`; use `ts-jest`; set `testMatch` for `**/*.test.ts`; set `testPathIgnorePatterns` for `node_modules`, `dist`.
-- [ ] **0.1.4** Add npm scripts: `build`, `start`, `dev` (nodemon/ts-node-dev), `test`, `test:watch`, `db:generate`, `db:migrate`, `db:seed`, `db:studio`.
+- [ ] **0.1.2** Configure TypeScript: `tsconfig.json` targeting native ES modules (e.g. `"module": "NodeNext"` or `"module": "ESNext"` with `"moduleResolution": "NodeNext"`, plus `outDir`, `strict`, and any path aliases as needed). Configure Node to run ESM (e.g. `"type": "module"` in `package.json` or using `.mjs`/`.mts` entrypoints) and use `import`/`export` syntax only in source files.
+- [ ] **0.1.3** Configure Jest: `jest.config.js` or `jest` section in `package.json`; use `ts-jest`; set `testMatch` for `**/*.test.ts`; set `testPathIgnorePatterns` for `node_modules`, `dist`; ensure Jest is configured in an ESM-compatible way (e.g. `ts-jest` with `useESM: true` or equivalent).
+- [ ] **0.1.4** Add npm scripts: `build`, `start`, `dev` (using an ESM-aware runner such as Node with ESM support or `tsx`), `test`, `test:watch`, `db:generate`, `db:migrate`, `db:seed`, `db:studio`, all assuming the ESM-aware Jest configuration from **0.1.3**.
 - [ ] **0.1.5** Create folder structure: `src/` (or `src/api`, `src/cli`, `src/services`, `src/lib`), `src/__tests__/`, `prisma/`, root `.env.example` with `DATABASE_URL`, `JWT_SECRET`, `PROCESSED_DIR`, etc.
 - [ ] **0.1.6** Add `.env.example` and document all required env vars; ensure `.env` and token path are in `.gitignore`.
 
