@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 export type AuthTokenPayload = {
   sub: string;
   email: string;
+  isAdmin: boolean;
   iat: number;
   exp: number;
 };
@@ -17,11 +18,16 @@ const getJwtSecret = () => {
   return process.env.JWT_SECRET;
 };
 
-export const signAccessToken = (user: { id: string; email: string }) => {
+export const signAccessToken = (user: {
+  id: string;
+  email: string;
+  isAdmin: boolean;
+}) => {
   return jwt.sign(
     {
       sub: user.id,
       email: user.email,
+      isAdmin: user.isAdmin,
     },
     getJwtSecret(),
     {

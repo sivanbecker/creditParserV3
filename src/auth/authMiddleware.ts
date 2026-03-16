@@ -24,6 +24,7 @@ export const authMiddleware = (
     req.user = {
       id: payload.sub,
       email: payload.email,
+      isAdmin: payload.isAdmin ?? false,
     };
 
     return next();
