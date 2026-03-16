@@ -1,0 +1,27 @@
+---
+description: Git workflow rules – all work happens in feature branches
+alwaysApply: true
+---
+
+# Git Workflow Rules
+
+- **No direct commits to `main`**:
+  - All changes must be made in a dedicated branch created from `main`.
+  - The working branch should reflect a single task or concern.
+
+- **Per-task branches**:
+  - Each task/code change must have its own branch.
+  - Do not mix unrelated changes in the same branch.
+
+- **Merge process**:
+  - When a task is complete:
+    - All automated tests must pass.
+    - Manual checks for the task must be done and have no errors.
+    - Changes must be explicitly approved by the user before merging.
+  - After approval, merge the feature branch into `main`.
+
+- **Assistant behavior**:
+  - The assistant must:
+    - Assume work happens on a non-`main` branch.
+    - Prefer `git` commands that create/use dedicated branches instead of committing to `main`.
+    - Never run destructive git commands or push to `main` unless explicitly requested by the user.
