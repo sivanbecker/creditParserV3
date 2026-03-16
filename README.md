@@ -147,14 +147,60 @@ Expected: `200` response with the authenticated user payload:
 
 If you omit or break the `Authorization` header, you should see a `401` with an error message, which confirms the auth middleware is wired correctly.
 
+### 4. Admin routes (admin only)
+
+Admin endpoints live under `/admin` and require a valid JWT for a user with `isAdmin: true`. Without a token you get `401`; with a non-admin token you get `403`.
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/admin/users` | List all users (id, email, createdAt, isAdmin). No passwords. |
+| `POST` | `/admin/users` | Create a user. Body: `{ "email", "password", "isAdmin" }` (password validated like register). Returns `201` and the created user; `409` if email already exists. |
+| `PATCH` | `/admin/users/:id` | Update a user. Body: `{ "isAdmin": true \| false }`. Returns `200` with updated user; `404` if user not found. |
+
+To get an admin token, set a user as admin in the database (e.g. via Prisma Studio: `npm run db:studio` → User → set `isAdmin = true`), then call `POST /auth/login` with that user’s email and password. Use the returned `token` in the `Authorization: Bearer <token>` header for admin requests.
+
+---
+
+## Scripts and checklist
+
+The `scripts/` directory contains route checkers and a pre-commit checklist. Run them from the project root with the API server already running (unless otherwise noted).
+
+### Auth route checker (`scripts/auth-routes-checker.sh`)
+
+Smoke-tests the auth flow: register (random email/password), login, and `GET /me` with the JWT. No arguments; uses `BASE_URL` if set.
+
+```bash
+chmod +x scripts/auth-routes-checker.sh   # once
+./scripts/auth-routes-checker.sh
+```
+
+Optional: `BASE_URL=http://localhost:3000 ./scripts/auth-routes-checker.sh`
+
+### Admin route checker (`scripts/admin-routes-checker.sh`)
+
+Smoke-tests admin-only routes: login as admin, `GET /admin/users`, `POST /admin/users` (create a random user), `PATCH /admin/users/:id`, and a final `GET /admin/users` to confirm the new user. Requires an existing admin user.
+
+```bash
+chmod +x scripts/admin-routes-checker.sh   # once
+ADMIN_EMAIL=admin@example.com ADMIN_PASSWORD='your-admin-password' ./scripts/admin-routes-checker.sh
+```
+
+Optional: `BASE_URL=http://localhost:3000` (default).
+
+### Pre-commit checklist (`scripts/pre-commit-checklist.md`)
+
+A markdown checklist for verifying the app before committing: start DB, run migrations, regenerate Prisma client, run tests, build, start the server, and manually test auth and admin routes with curl. Use it as a reference; it does not run automatically.
+
 ---
 
 ## Where to look next
 
 - **Auth implementation**: `src/auth/*` (`authController.ts`, `authRoutes.ts`, `authMiddleware.ts`, `authSchemas.ts`, `passwordValidation.ts`).
+- **Admin implementation**: `src/admin/*` (`adminMiddleware.ts`, `adminRoutes.ts`).
 - **Express app wiring**: `src/app.ts` and `src/index.ts`.
 - **Prisma client**: `src/lib/prisma.ts` (configured with the PostgreSQL adapter and `DATABASE_URL`).
 - **Prisma schema & migrations**: `prisma/schema.prisma`, `prisma/migrations/*`.
+- **Route checkers and checklist**: `scripts/auth-routes-checker.sh`, `scripts/admin-routes-checker.sh`, `scripts/pre-commit-checklist.md`.
 
 For higher-level feature planning, always consult `IMPLEMENTATION_PLAN.md` (phase breakdown) together with `questions.md` (product decisions) before adding or changing behavior.
 
