@@ -9,3 +9,5 @@ node_modules/*
 .env.production
 processed
 dist
+mcp.json
+.DS_Store
