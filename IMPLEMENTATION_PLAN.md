@@ -59,10 +59,17 @@ This plan is derived from `spec.md`, `TECHNICAL_SPEC.md`, and `questions.md`. It
 - [ ] **1.2.5** Implement `POST /admin/users`: create user (email + password); validate and hash; return safe payload.
 - [ ] **1.2.6** Implement `PATCH /admin/users/:id` (or similar): deactivate user if required (e.g. soft delete flag).
 
-### 1.3 CLI auth
-- [ ] **1.3.1** Implement CLI `login` command: prompt for email + password (or read from env/args for non-interactive); call `POST /login`; write token to `~/.credit-tracker/token`; create directory if needed.
-- [ ] **1.3.2** Implement token reader: read from `~/.credit-tracker/token` (or env override); use in all API requests as Bearer token; clear error if file missing (suggest running `login`).
-- [ ] **1.3.3** Wire CLI commands to send Bearer token on every request; handle 401 with “Please run login again” message.
+### 1.3 CI
+- [ ] **1.3.1** Define GitHub Actions CI workflow skeleton in `.github/workflows/ci.yml`: trigger on `pull_request` to `main` (and other long-lived branches if needed) and on `push` to `main`; use Node 24 with npm and `npm ci` for dependency installation.
+- [ ] **1.3.2** Add npm scripts (to be implemented later in code) for `lint`, `lint:fix`, `format`, and `format:check` so that CI can run `npm run lint` and `npm run format:check` using the exact same ESLint/formatter configuration as local development (no CI-only rules).
+- [ ] **1.3.3** Establish `scripts/checkers/` as the canonical location for non-interactive checker scripts: move `scripts/auth-routes-checker.sh` and `scripts/admin-routes-checker.sh` into `scripts/checkers/` and ensure any future checker scripts (e.g. health, permissions, smoke checks) are added there as `*.sh` files that are idempotent and fail-fast on errors.
+- [ ] **1.3.4** In the CI `build-and-checkers` job, after `lint-format` and `unit-tests` succeed, build the project (`npm run build`), start the API/server with appropriate env for CI, and run all checker scripts via a loop over `scripts/checkers/*.sh` (fail the job if any checker exits non-zero).
+- [ ] **1.3.5** For Phase 1, keep CI primarily unit-test focused (no mandatory real DB in CI jobs), but design the workflow so that a separate `integration-tests` job with a Postgres service (migrations + seed + `npm run test:integration`) can be added later in Phase 5 without restructuring the existing jobs.
+
+### 1.4 CLI auth
+- [ ] **1.4.1** Implement CLI `login` command: prompt for email + password (or read from env/args for non-interactive); call `POST /login`; write token to `~/.credit-tracker/token`; create directory if needed.
+- [ ] **1.4.2** Implement token reader: read from `~/.credit-tracker/token` (or env override); use in all API requests as Bearer token; clear error if file missing (suggest running `login`).
+- [ ] **1.4.3** Wire CLI commands to send Bearer token on every request; handle 401 with “Please run login again” message.
 
 ---
 
