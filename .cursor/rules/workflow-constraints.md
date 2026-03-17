@@ -20,3 +20,9 @@ alwaysApply: true
 
 ## 3. Naming Convention
 - All feature/fix branches must follow: `[0-9]+/[a-z-]+` (e.g., `102/fix-database-latency`).
+
+## 4. Enforcement Summary (Mandatory Behavior)
+- The agent must **never** continue working on a task unless:
+  - A corresponding GitHub issue exists (create one with an elaborated description if none is found via `search_issues`).
+  - The current Git branch is **not** `main` or `master` (create/switch to a feature branch based on the active issue before doing any work).
+- These constraints apply to **all** agents and to **all** operations (code edits, commands, refactors, and other automated changes).

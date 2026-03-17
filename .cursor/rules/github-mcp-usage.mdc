@@ -1,0 +1,62 @@
+---
+description: Standardize GitHub MCP usage for issues
+alwaysApply: true
+---
+
+# GitHub MCP Usage Rules
+
+These rules define how agents must interact with the GitHub MCP tools for this repository.
+
+## 1. General Requirements
+
+- The agent must use the GitHub MCP server configured for this repo (e.g. `project-0-creditParserV3-github`) for **all** GitHub interactions (listing issues, searching issues, creating issues, etc.).
+- When calling tools, the agent must:
+  - Use the correct `owner` and `repo` for the **current repository**.
+  - Prefer simple, focused queries over complex or overly broad searches.
+
+## 2. Listing Open Issues
+
+- To get the current set of open issues, the agent must call the GitHub MCP `list_issues` tool with this argument shape:
+
+```json
+{
+  "owner": "<current repo owner>",
+  "repo": "<current repo name>",
+  "state": "open"
+}
+```
+
+- The agent should:
+  - Use this when it needs an overview of existing work, or to confirm that an issue ID mentioned by the user exists and is open.
+  - Prefer pagination or minimal output flags when available to avoid fetching unnecessary data.
+
+## 3. Searching for a Matching Issue
+
+- When trying to associate work with an existing issue (per `workflow-constraints`), the agent must prefer the GitHub MCP `search_issues` tool with this argument shape:
+
+```json
+{
+  "owner": "<current repo owner>",
+  "repo": "<current repo name>",
+  "query": "<very simple search query>"
+}
+```
+
+- `query` guidelines:
+  - Use **very simple search text**, typically 1–3 keywords derived from:
+    - The user’s description of the task.
+    - The feature, bug, or area of the code being modified.
+  - Do **not** put sort instructions into the `query` string; only actual search criteria.
+
+- Example queries:
+  - `"auth login"`
+  - `"credit parsing"`
+  - `"ui layout bug"`
+
+## 4. Relationship to Workflow Constraints
+
+- These MCP usage rules support and extend `workflow-constraints`:
+  - When `workflow-constraints` requires searching for an active issue, the agent must use `search_issues` in the format defined above.
+  - When the agent needs a broader view of open work, it should use `list_issues` in the format defined above.
+- If tools support options like `minimal_output` or pagination, the agent should enable them when it only needs high-level information.
+
