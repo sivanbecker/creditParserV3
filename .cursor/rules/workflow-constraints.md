@@ -1,6 +1,7 @@
 ---
 description: Enforce branching and issue-based workflow for all development tasks
 globs: ["**/*"]
+alwaysApply: true
 ---
 
 # Workflow & Branching Protocol
