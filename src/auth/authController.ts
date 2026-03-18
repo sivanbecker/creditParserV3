@@ -4,11 +4,7 @@ import { prisma } from '../lib/prisma.js';
 import { registerSchema, loginSchema } from './authSchemas.js';
 import { signAccessToken } from './jwt.js';
 
-export const handleRegister = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const handleRegister = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const parsed = registerSchema.safeParse(req.body);
 
@@ -51,11 +47,7 @@ export const handleRegister = async (
   }
 };
 
-export const handleLogin = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const handleLogin = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const parsed = loginSchema.safeParse(req.body);
 
@@ -89,4 +81,3 @@ export const handleLogin = async (
     return next(error);
   }
 };
-

@@ -12,7 +12,7 @@ const SYSTEM_CATEGORIES = [
   'פנאי',
   'הכנסות',
   'עמלות',
-  'אחר'
+  'אחר',
 ];
 
 const main = async (): Promise<void> => {

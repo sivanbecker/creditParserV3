@@ -1,0 +1,9 @@
+node_modules
+dist
+coverage
+package-lock.json
+prisma/migrations
+.cursor
+**/*.md
+docker-compose.yml
+

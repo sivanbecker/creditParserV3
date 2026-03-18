@@ -85,4 +85,3 @@ describe('POST /auth/register', () => {
     expect(response.body).toHaveProperty('details');
   });
 });
-
