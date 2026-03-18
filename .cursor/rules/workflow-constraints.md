@@ -7,9 +7,8 @@ alwaysApply: true
 # Workflow & Branching Protocol
 
 ## 1. Requirement: Active Issue
-- Before starting any task, verify that there is a documented issue or clear task description. (try finding an issue opened before using github mcp. Use the github search_issues tool. Explicitly pass the argument query: 'is:issue is:open <a word or two fro querying>' in the tool call)
-- if not matching issue found on github, first help creating an issue.
-- If no issue is provided, ask the user: "What is the Issue ID or description for this work?". 
+- Before starting any task, verify that there is an open github issue. (try finding an issue using github issues skill)
+- if not matching issue found on github, first help creating an issue using same skill.
 
 ## 2. Requirement: Branch Validation
 - **Main Branch Protection:** You are strictly forbidden from making edits or running build commands while on the `main` or `master` branch.
