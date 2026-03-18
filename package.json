@@ -44,6 +44,9 @@
     "xlsx": "^0.18.5",
     "zod": "^4.3.6"
   },
+  "engines": {
+    "node": ">=24 <25"
+  },
   "prisma": {
     "seed": "ts-node --esm prisma/seed.ts"
   }

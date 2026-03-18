@@ -5,6 +5,10 @@ alwaysApply: true
 
 # Git Workflow Rules
 
+- **No work on `main` or `master`:**
+  - The assistant must never perform changes, run builds, or commit while on `main` or `master`.
+  - If the current branch is `main`/`master`, it must first switch to or create a feature branch that is associated with an active GitHub issue (see `workflow-constraints` rules).
+
 - **No direct commits to `main`**:
   - All changes must be made in a dedicated branch created from `main`.
   - The working branch should reflect a single task or concern.

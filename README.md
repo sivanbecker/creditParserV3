@@ -25,7 +25,8 @@ When working in Cursor, the assistant and tools follow these rules automatically
 
 ### 1. Prerequisites
 
-- Node.js 20+ (ESM-compatible; project uses `"type": "module"`).
+- Node.js 24.x (>=24 <25) (ESM-compatible; project uses `"type": "module"`).
+- Use `nvm use` in the project root to load the version from `.nvmrc`.
 - Docker + Docker Compose (for PostgreSQL).
 
 ### 2. Install dependencies
