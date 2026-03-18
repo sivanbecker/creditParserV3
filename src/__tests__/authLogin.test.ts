@@ -108,4 +108,3 @@ describe('POST /auth/login', () => {
     expect(response.body).toHaveProperty('details');
   });
 });
-

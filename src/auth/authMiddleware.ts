@@ -1,11 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import { verifyAccessToken } from './jwt.js';
 
-export const authMiddleware = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const header = req.header('Authorization');
 
   if (!header) {
@@ -32,4 +28,3 @@ export const authMiddleware = (
     return res.status(401).json({ error: 'Invalid or expired token' });
   }
 };
-

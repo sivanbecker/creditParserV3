@@ -129,4 +129,3 @@ adminRouter.patch('/users/:id', async (req, res, next) => {
     return next(error);
   }
 });
-

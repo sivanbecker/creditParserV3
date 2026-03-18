@@ -57,4 +57,3 @@ describe('auth middleware /me route', () => {
     expect(response.body).toHaveProperty('error');
   });
 });
-

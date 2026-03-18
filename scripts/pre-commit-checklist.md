@@ -37,7 +37,23 @@ Expect: all test suites pass (e.g. 5 passed, 24 tests).
 
 ---
 
-## 4. Build
+## 4. Lint (ESLint)
+
+```bash
+npm run lint
+```
+
+Expect: no ESLint errors.
+---
+## 5. Format (Prettier)
+
+```bash
+npm run format:check
+```
+
+Expect: all files match the Prettier formatting rules.
+---
+## 6. Build
 
 ```bash
 npm run build
@@ -47,7 +63,7 @@ Expect: no TypeScript errors; `dist/` is created.
 
 ---
 
-## 5. Start the server
+## 7. Start the server
 
 ```bash
 npm start
@@ -57,11 +73,11 @@ Expect: e.g. `Server listening on port 3000`. Leave this running in one terminal
 
 ---
 
-## 6. Smoke test existing and new routes (curl)
+## 8. Smoke test existing and new routes (curl)
 
 Use a second terminal. Base URL: `http://localhost:3000` (or your `PORT` from `.env`).
 
-### 6.1 Auth (existing)
+### 8.1 Auth (existing)
 
 ```bash
 # Register
@@ -81,7 +97,7 @@ curl -s http://localhost:3000/me -H "Authorization: Bearer $TOKEN" | jq .
 
 Expect: register 201, login 200 with `token`, /me 200 with `user: { id, email }`.
 
-### 6.2 Admin routes (new) – without admin token
+### 8.2 Admin routes (new) – without admin token
 
 ```bash
 # No token → 401
@@ -93,7 +109,7 @@ curl -s http://localhost:3000/admin/users -H "Authorization: Bearer $TOKEN" | jq
 
 Expect: 401 and 403 with appropriate error messages.
 
-### 6.3 Make a user admin and call admin routes
+### 8.3 Make a user admin and call admin routes
 
 In Prisma Studio or psql, set the user as admin:
 
@@ -127,7 +143,7 @@ Expect: 200 with user list, 201 with created user (no passwordHash).
 
 ---
 
-## 7. Optional: run dev server instead of build + start
+## 9. Optional: run dev server instead of build + start
 
 ```bash
 npm run dev
@@ -144,9 +160,11 @@ docker compose up -d db
 npm run db:migrate
 npm run db:generate
 npm test
+npm run lint
+npm run format:check
 npm run build
 npm start
-# In another terminal: run curl commands from section 6
+# In another terminal: run curl commands from section 8
 ```
 
 After all steps pass, you can commit.

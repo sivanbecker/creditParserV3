@@ -85,6 +85,8 @@ Server listening on port 3000
 Unit tests are written with Jest and live under `src/__tests__/`.
 
 ```bash
+npm run lint
+npm run format:check
 npm test
 ```
 
@@ -190,7 +192,7 @@ Optional: `BASE_URL=http://localhost:3000` (default).
 
 ### Pre-commit checklist (`scripts/pre-commit-checklist.md`)
 
-A markdown checklist for verifying the app before committing: start DB, run migrations, regenerate Prisma client, run tests, build, start the server, and manually test auth and admin routes with curl. Use it as a reference; it does not run automatically.
+A markdown checklist for verifying the app before committing: start DB, run migrations, regenerate Prisma client, run lint + format checks, run tests, build, start the server, and manually test auth and admin routes with curl. Use it as a reference; it does not run automatically.
 
 ---
 

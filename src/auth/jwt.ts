@@ -18,11 +18,7 @@ const getJwtSecret = () => {
   return process.env.JWT_SECRET;
 };
 
-export const signAccessToken = (user: {
-  id: string;
-  email: string;
-  isAdmin: boolean;
-}) => {
+export const signAccessToken = (user: { id: string; email: string; isAdmin: boolean }) => {
   return jwt.sign(
     {
       sub: user.id,
@@ -39,4 +35,3 @@ export const signAccessToken = (user: {
 export const verifyAccessToken = (token: string) => {
   return jwt.verify(token, getJwtSecret()) as AuthTokenPayload;
 };
-

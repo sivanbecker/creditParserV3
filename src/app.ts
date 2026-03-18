@@ -19,4 +19,3 @@ app.get('/me', authMiddleware, (req, res) => {
 
   return res.json({ user: req.user });
 });
-

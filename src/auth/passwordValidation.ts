@@ -23,15 +23,15 @@ const basePasswordSchema = z
 
 export const passwordSchema = basePasswordSchema
   .transform((rawValue): string => rawValue.trim())
-  .refine((value: string) => {
-    const normalized = value.toLowerCase();
+  .refine(
+    (value: string) => {
+      const normalized = value.toLowerCase();
 
-    return !PASSWORD_BLACKLIST.some(
-      (blacklisted) => normalized === blacklisted.toLowerCase(),
-    );
-  }, { message: 'Password is too common or insecure' });
+      return !PASSWORD_BLACKLIST.some((blacklisted) => normalized === blacklisted.toLowerCase());
+    },
+    { message: 'Password is too common or insecure' },
+  );
 
 export const validatePassword = (password: string) => {
   return passwordSchema.safeParse(password);
 };
-

@@ -142,10 +142,7 @@ describe('Admin API /admin/users', () => {
       .set('Authorization', `Bearer ${token}`)
       .expect(403);
 
-    expect(response.body).toHaveProperty(
-      'error',
-      'Forbidden: admin access required',
-    );
+    expect(response.body).toHaveProperty('error', 'Forbidden: admin access required');
   });
 
   it('allows admin user to list users', async () => {
@@ -230,10 +227,7 @@ describe('Admin API /admin/users', () => {
       })
       .expect(409);
 
-    expect(response.body).toHaveProperty(
-      'error',
-      'Email is already registered',
-    );
+    expect(response.body).toHaveProperty('error', 'Email is already registered');
   });
 
   it('returns 400 for invalid POST /admin/users body', async () => {
@@ -323,4 +317,3 @@ describe('Admin API /admin/users', () => {
     expect(response.body).toHaveProperty('details');
   });
 });
-
