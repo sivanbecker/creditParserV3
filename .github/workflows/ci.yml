@@ -14,6 +14,7 @@ jobs:
     env:
       NODE_ENV: test
       JWT_SECRET: ci-test-secret
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
       DATABASE_URL: postgresql://credit:credit@localhost:5432/credit_tracker
       PORT: 3000
     steps:
