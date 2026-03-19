@@ -40,7 +40,7 @@ npm install
 Copy `.env` (or create it) and set at least:
 
 ```env
-DATABASE_URL="postgresql://credit:credit@localhost:5432/credit_tracker"
+DATABASE_URL="postgresql://someuser:change-me@localhost:5432/credit_tracker"
 JWT_SECRET="dev-secret-change-me"
 PROCESSED_DIR="./processed" # optional, used later for ingest
 ```

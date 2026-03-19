@@ -3,7 +3,7 @@ services:
     image: postgres:16-alpine
     environment:
       POSTGRES_USER: credit
-      POSTGRES_PASSWORD: credit
+      POSTGRES_PASSWORD: change-me
       POSTGRES_DB: credit_tracker
     ports:
       - "5432:5432"
