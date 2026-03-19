@@ -71,6 +71,7 @@ Notes on closed issues handled before CLI auth (tooling/config context):
 - #3 Set Node version and `.nvmrc` for the project.
 - #4 Add Phase 1 GitHub Actions CI for auth and admin routes.
 - #8 Public repo security/privacy hardening (removes embedded secrets from repo configs).
+- #12 Add `CODEOWNERS` so `@sivanbecker` is requested as a reviewer automatically.
 
 ### 1.4 CLI auth
 - [ ] **1.4.1** Implement CLI `login` command: prompt for email + password (or read from env/args for non-interactive); call `POST /login`; write token to `~/.credit-tracker/token`; create directory if needed.
