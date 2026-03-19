@@ -11,7 +11,7 @@ This skill lets the agent use the **GitHub CLI (`gh`) via the Shell tool** to wo
 - **Closing / reopening an issue**
 - **Commenting on an issue**
 
-> Note: This skill is explicitly about `gh` usage. In this workspace there is also a GitHub MCP server configured; the agent should still respect any higher‑priority rules about when to use MCP vs CLI. When the user explicitly asks to use `gh`, follow this skill.
+> Note: This skill is explicitly about `gh` usage. When the user asks for GitHub issue operations via `gh`, follow this skill.
 
 ---
 
@@ -43,7 +43,7 @@ Examples that SHOULD trigger this skill:
 - “Use `gh` to create an issue titled …”
 - “Use `gh` to close issue #42 with a comment.”
 
-If the user just says “list issues” or “create an issue” with no mention of `gh`, you may instead prefer the GitHub MCP tools configured for this repo (per workspace rules).
+If the user just says “list issues” or “create an issue” with no mention of `gh`, you may still use this skill (via `gh`) to perform the request.
 
 ---
 
@@ -400,7 +400,7 @@ Run via Shell from the workspace root.
 
 This skill lets the agent use the **GitHub CLI (`gh`) via the Shell tool** to work with GitHub issues for the current repository, starting with **listing issues**.
 
-> Note: This skill is explicitly about `gh` usage. In this workspace there is also a GitHub MCP server configured; the agent should still respect any higher‑priority rules about when to use MCP vs CLI. When the user explicitly asks to use `gh`, follow this skill.
+> Note: This skill is explicitly about `gh` usage. When the user asks for GitHub issue operations via `gh`, follow this skill.
 
 ---
 
@@ -429,7 +429,7 @@ Examples that SHOULD trigger this skill:
 - “github issues: open bugs assigned to me.”
 - “gh issues: list all issues with label frontend.”
 
-If the user just says “list issues” with no mention of `gh`, you may instead prefer the GitHub MCP tools configured for this repo (per workspace rules).
+If the user just says “list issues” with no mention of `gh`, you may still use this skill (via `gh`) to perform the request.
 
 ---
 
