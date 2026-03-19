@@ -66,6 +66,12 @@ This plan is derived from `spec.md`, `TECHNICAL_SPEC.md`, and `questions.md`. It
 - [ ] **1.3.4** In the CI `build-and-checkers` job, after `lint-format` and `unit-tests` succeed, build the project (`npm run build`), start the API/server with appropriate env for CI, and run all checker scripts via a loop over `scripts/checkers/*.sh` (fail the job if any checker exits non-zero).
 - [ ] **1.3.5** For Phase 1, keep CI primarily unit-test focused (no mandatory real DB in CI jobs), but design the workflow so that a separate `integration-tests` job with a Postgres service (migrations + seed + `npm run test:integration`) can be added later in Phase 5 without restructuring the existing jobs.
 
+Notes on closed issues handled before CLI auth (tooling/config context):
+- #2 Configure ESLint and Prettier for the project (adds lint/format baseline).
+- #3 Set Node version and `.nvmrc` for the project.
+- #4 Add Phase 1 GitHub Actions CI for auth and admin routes.
+- #8 Public repo security/privacy hardening (removes embedded secrets from repo configs).
+
 ### 1.4 CLI auth
 - [ ] **1.4.1** Implement CLI `login` command: prompt for email + password (or read from env/args for non-interactive); call `POST /login`; write token to `~/.credit-tracker/token`; create directory if needed.
 - [ ] **1.4.2** Implement token reader: read from `~/.credit-tracker/token` (or env override); use in all API requests as Bearer token; clear error if file missing (suggest running `login`).
