@@ -6,9 +6,7 @@ export type HttpClient = {
   baseUrl: string;
 };
 
-export const createHttpClient = (
-  options: CreateHttpClientOptions = {},
-): HttpClient => {
+export const createHttpClient = (options: CreateHttpClientOptions = {}): HttpClient => {
   const baseUrl = options.baseUrl ?? process.env.API_BASE_URL;
 
   if (!baseUrl) {
@@ -19,4 +17,3 @@ export const createHttpClient = (
     baseUrl,
   };
 };
-

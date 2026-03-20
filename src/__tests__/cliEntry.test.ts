@@ -18,4 +18,3 @@ describe('CLI entrypoint', () => {
     expect(typeof program.helpInformation).toBe('function');
   });
 });
-

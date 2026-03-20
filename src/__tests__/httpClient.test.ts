@@ -28,9 +28,6 @@ describe('CLI HTTP client configuration', () => {
   it('throws a clear error when API base URL is not configured', () => {
     delete process.env.API_BASE_URL;
 
-    expect(() => createHttpClient()).toThrow(
-      'API base URL is not configured',
-    );
+    expect(() => createHttpClient()).toThrow('API base URL is not configured');
   });
 });
-
