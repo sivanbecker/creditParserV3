@@ -14,7 +14,7 @@ alwaysApply: true
 - **Main Branch Protection:** You are strictly forbidden from making edits or running build commands while on the `main` or `master` branch.
 - **Action:** If the current branch is `main`, you must:
     1. Read the current issue context.
-    2. Suggest (or execute) a branch creation using the naming convention: `<issue#>/<short-descriptive-name>`.
+    2. Suggest (or execute) a branch creation using the naming convention: `<issue-issue#>/<short-descriptive-name>`.
     3. Switch to that branch before proceeding with any code changes.
 
 ## 3. Naming Convention

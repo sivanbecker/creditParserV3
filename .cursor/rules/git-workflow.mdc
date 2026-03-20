@@ -29,3 +29,7 @@ alwaysApply: true
     - Assume work happens on a non-`main` branch.
     - Prefer `git` commands that create/use dedicated branches instead of committing to `main`.
     - Never run destructive git commands or push to `main` unless explicitly requested by the user.
+
+- **When Commiting**:
+  - Never use --trailer in git commit
+  - Never add "Made-with: Cursor"
